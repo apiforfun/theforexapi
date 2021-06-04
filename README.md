@@ -38,4 +38,4 @@ https://theforexapi.com/api/latest?base=USD&symbols=GBP
 
 # Support and feature requests:
 
-We welcome your feedback and support, raise [github ticket](https://github.com/apiforfun/theforexapi/issues) if you want to report a bug. Need new features? Contact us [here](theforexapi@gmail.com)
+We welcome your feedback and support, raise [github ticket](https://github.com/apiforfun/theforexapi/issues) if you want to report a bug. Need new features? Contact me at theforexapi@gmail.com
