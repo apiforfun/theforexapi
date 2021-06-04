@@ -44,7 +44,6 @@ with open('../eurofxref-hist.csv', newline='') as csvfile:
         new_row['base'] = 'EUR'
 
         print(new_row)
-        break
         for k in new_row['rates'].keys():
             if k not in ('date', 'base'):
                 calculate_new_base(k, new_row)
