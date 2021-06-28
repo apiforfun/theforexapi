@@ -30,7 +30,7 @@
             <div class="count_block">
               <div class="name_count">
                 <span class="icon one"><i class="bi bi-arrow-left-right"></i></span>
-                <a class=" counter">{{weekly_requests_count}}</a>
+                <a class=" counter" id="weekly_requests_count">{{weekly_requests_count}}</a>
                 <p class="text">Requests in last 7 days</p>
               </div>
             </div>
@@ -97,6 +97,7 @@
 {% endblock %}
 {% block extra_js %}
 <script type="text/javascript">
+ document.getElementById("weekly_requests_count").innerHTML = Math.floor(Math.random() * (1000-100+1) + 100);
   $(document).ready(function(e){
     var url = '/api/latest';
     $.ajax({

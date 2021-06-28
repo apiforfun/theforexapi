@@ -26,6 +26,7 @@ async function latestData (req, res, next) {
         if (err) throw err
         dbo.close()
         if (result[0]) {
+          console.log(result[0])
           res.writeHead(200, { 'Content-Type': 'text/json' })
           res.write(JSON.stringify(result[0]))
         } else {
@@ -40,11 +41,23 @@ async function latestData (req, res, next) {
 
 async function dateData (req, res, next) {
   console.log(req.params.dateParam);
+  dateParam = req.params.dateParam
+  date_obj = new Date(dateParam);
+  if(date_obj.getDay() == 6) {
+    console.log('satuarday')
+    date_obj.setDate(date_obj.getDate() - 1);
+    dateParam = date_obj.getFullYear() + "-" + ("0"+(date_obj.getMonth()+1)).slice(-2) + "-" + date_obj.getDate()
+  }
+  if(date_obj.getDay() == 0) {
+    console.log('sunday')
+    date_obj.setDate(date_obj.getDate() - 2);
+    dateParam = date_obj.getFullYear() + "-" + ("0"+(date_obj.getMonth()+1)).slice(-2) + "-" + date_obj.getDate()
+  }
   MongoClient.connect(db, function (err, dbo) {
       const db = dbo.db('theforexapi')
       const collection = db.collection('currency')
       fields = { base: 1, date: 1, _id: 0, rates: 1 }
-      query = { base: 'EUR', date: req.params.dateParam }
+      query = { base: 'EUR', date: dateParam }
       if (req.query.base) {
         query.base = req.query.base.toUpperCase()
       }
@@ -66,7 +79,7 @@ async function dateData (req, res, next) {
           res.write(JSON.stringify(result[0]))
         } else {
           res.writeHead(400, { 'Content-Type': 'application/json' })
-          res.write(JSON.stringify({ error: 'Invalid base or symbols' }))
+          res.write(JSON.stringify({ error: 'Invalid base or symbols or date' }))
         }
         res.end()
       })
