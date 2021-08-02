@@ -20,13 +20,14 @@ async function latestData (req, res, next) {
           fields[symbol] = 1
         }
       }
-      console.log(query)
-      console.log(fields)
       const cursor = collection.find(query, { fields: fields }).sort({ date: -1 }).limit(1).toArray(function (err, result) {
         if (err) throw err
         dbo.close()
         if (result[0]) {
-          console.log(result[0])
+          currency_keys = Object.keys(result[0]['rates'])
+          for (let key of currency_keys) {
+            result[0]['rates'][key] = parseFloat(result[0]['rates'][key])
+          }
           res.writeHead(200, { 'Content-Type': 'text/json' })
           res.write(JSON.stringify(result[0]))
         } else {

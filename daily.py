@@ -42,7 +42,7 @@ for url in urls:
                 'base': cbBase['#text'],
                 'rates': {}
             }
-        record_data[date]['rates'][exchangeRate['cb:targetCurrency']] = cbValue['#text']
+        record_data[date]['rates'][exchangeRate['cb:targetCurrency']] = float(cbValue['#text'])
 
 
 def calculate_new_base(new_base, new_row):
