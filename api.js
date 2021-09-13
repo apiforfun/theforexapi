@@ -46,6 +46,10 @@ http.createServer(function (req, res) {
         if (err) throw err
         dbo.close()
         if (result[0]) {
+          currency_keys = Object.keys(result[0]['rates'])
+          for (let key of currency_keys) {
+            result[0]['rates'][key] = parseFloat(result[0]['rates'][key])
+          }
           res.writeHead(200, { 'Content-Type': 'text/json' })
           res.write(JSON.stringify(result[0]))
         } else {

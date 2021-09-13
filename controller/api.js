@@ -41,24 +41,26 @@ async function latestData(req, res, next) {
 
 
 async function dateData(req, res, next) {
-  console.log(req.params.dateParam);
   dateParam = req.params.dateParam
   date_obj = new Date(dateParam);
+  dateparam1 = date_obj.getFullYear() + "-" + ("0" + (date_obj.getMonth() + 1)).slice(-2) + "-" + (date_obj.getDate() < 10 ? '0' : '') + date_obj.getDate()
   if (date_obj.getDay() == 6) {
     console.log('satuarday')
     date_obj.setDate(date_obj.getDate() - 1);
     dateParam = date_obj.getFullYear() + "-" + ("0" + (date_obj.getMonth() + 1)).slice(-2) + "-" + date_obj.getDate()
+    dateparam1 = date_obj.getFullYear() + "-" + ("0" + (date_obj.getMonth() + 1)).slice(-2) + "-" + (date_obj.getDate() < 10 ? '0' : '') + date_obj.getDate()
   }
   if (date_obj.getDay() == 0) {
     console.log('sunday')
     date_obj.setDate(date_obj.getDate() - 2);
     dateParam = date_obj.getFullYear() + "-" + ("0" + (date_obj.getMonth() + 1)).slice(-2) + "-" + date_obj.getDate()
+    dateparam1 = date_obj.getFullYear() + "-" + ("0" + (date_obj.getMonth() + 1)).slice(-2) + "-" + (date_obj.getDate() < 10 ? '0' : '') + date_obj.getDate()
   }
   MongoClient.connect(db, function (err, dbo) {
     const db = dbo.db('theforexapi')
     const collection = db.collection('currency')
     fields = { base: 1, date: 1, _id: 0, rates: 1 }
-    query = { base: 'EUR', date: dateParam }
+    query = { base: 'EUR', "$or": [{date: dateParam}, {date: dateparam1}] }
     if (req.query.base) {
       query.base = req.query.base.toUpperCase()
     }
@@ -87,7 +89,8 @@ async function dateData(req, res, next) {
           date_obj = new Date(dateParam);
           date_obj.setDate(date_obj.getDate() - 1);
           dateParam = date_obj.getFullYear() + "-" + ("0" + (date_obj.getMonth() + 1)).slice(-2) + "-" + date_obj.getDate()
-          query = { base: 'EUR', date: dateParam }
+          dateparam1 = date_obj.getFullYear() + "-" + ("0" + (date_obj.getMonth() + 1)).slice(-2) + "-" + (date_obj.getDate() < 10 ? '0' : '') + date_obj.getDate()
+          query = { base: 'EUR', "$or": [{date: dateParam}, {date: dateparam1}] }
           console.log(query)
           const cursor = collection.find(query, { fields: fields }).sort({ date: -1 }).toArray(function (err, result) {
             if (err) {
